@@ -1,0 +1,20 @@
+
+a:link { text-decoration: none;
+}
+a{
+    color:black;
+
+}
+
+h1{
+    color:black;
+}
+
+nav{
+    display: flex;
+    flex-direction: column;
+}
+
+nav >*{
+    margin:0.5rem;
+}
