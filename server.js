@@ -1,14 +1,26 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
-const{conn,Task} = require('./db')
+const{conn,Task,User} = require('./db')
 const path = require('path')
 
 app.use(express.json())
 app.use('/dist',express.static('dist'))
 app.use('/assets',express.static('assets'))
 
+
+
 app.get('/',(req,res) => res.sendFile(path.join(__dirname,'index.html')))
+
+
+app.get('/api/users',async(req,res,next) => {
+    try{
+        res.send(await User.findAll())
+    }
+    catch(ex){
+        next(ex)
+    }
+})
 app.get('/api/tasks',async(req,res) => {
     try{
         res.send(await Task.findAll({
@@ -49,6 +61,7 @@ app.listen(port,async()=>{
     try{
         await conn.sync({force:true})
         console.log(`listening on port ${port}`)
+        const[moe,larry,lucy] = await Promise.all(['moe','larry','lucy'].map(name => { return User.create({name})}))
         const[milk,trash,car] = await Promise.all(['Get the milk','Take out Trash','Repair the car'].map(name => {return Task.create({name})}))
         milk.update({isComplete:true,priority:1})
     }

@@ -3,6 +3,12 @@ import logger from "redux-logger";
 import thunk from "redux-thunk";
 import axios from "axios";
 
+const users = (state=[],action) => {
+    if(action.type === 'SET_USERS'){
+        return action.users;
+    }
+    return state
+}
 
 const tasks = (state=[],action) => {
     if(action.type === 'SET_TASKS'){
@@ -35,8 +41,17 @@ const tasks = (state=[],action) => {
 }
 
 const reducer = combineReducers({
+    users,
     tasks
 })
+
+export const fetchUsers = () => {
+    return async(dispatch) => {
+        const response = await axios.get('/api/users')
+        console.log(response.data)
+        dispatch({type:'SET_USERS',users:response.data})
+    }
+}
 
 export const fetchTasks = () => {
     return async(dispatch) => {
